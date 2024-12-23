@@ -43,7 +43,7 @@ void loop() {
 
   if(currentMills - prevMills >= interval) {
    
-    /*if(bin.canBinDistance() < 30 && bin.can_IRs() == 0) {
+    if(bin.canBinDistance() < 30 && bin.can_IRs() == 0) {
       lcd.clear();
       lcd.setPosition(0,0);
       lcd.print("Bin metal full");
@@ -59,7 +59,7 @@ void loop() {
       lcd.setPosition(0,1);
       lcd.print("Action required!");
       bin.buzzerStart();
-    }*/
+    }
 
     if (Serial.available() > 0) {
       String command = Serial.readStringUntil('\n');

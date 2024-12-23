@@ -6,8 +6,7 @@ class BinMonitoring {
     const int echBottle = 10;
     const int canIR = 11;
     const int bottleIR = 12;
-    const int binCanBuzzer = 2;
-    const int binBottleBuzzer = 3;
+    const int binBuzzer = 2;
     long distanceCan, durationCan;
     long distanceBottle, durationBottle;
 
@@ -34,8 +33,7 @@ class BinMonitoring {
       pinMode(echBottle, INPUT);
       pinMode(canIR, INPUT);
       pinMode(bottleIR, INPUT);
-      pinMode(binCanBuzzer, OUTPUT);
-      pinMode(binBottleBuzzer, OUTPUT);
+      pinMode(binBuzzer, OUTPUT);
     }
     ~BinMonitoring() {
       digitalWrite(trigCan, LOW);
@@ -76,15 +74,13 @@ class BinMonitoring {
       return digitalRead(bottleIR);
     }
 
-    void buzzerStart(int buzzerPin) {
+    void buzzerStart() {
       for (int i = 0; i < 8; i++) {
         int noteDuration = 1000 / noteDurations[i];
-        tone(buzzerPin, static_cast<int>(melody[i]), noteDuration);
-
+        tone(binBuzzer, static_cast<int>(melody[i]), noteDuration);
         int pauseBetweenNotes = noteDuration * 1.30;
         delay(pauseBetweenNotes);
-
-        noTone(buzzerPin);
+        noTone(binBuzzer);
       }
     }
 };
