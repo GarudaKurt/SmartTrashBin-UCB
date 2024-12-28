@@ -80,7 +80,7 @@ void loop() {
         delay(1000);
       } else if (command.equals(metalCan)) {
         lcd.setPosition(0, 0);
-        lcd.print("Can detected");
+        lcd.print("Metal detected");
         Serial.println("Can detected");
 
         servoMain.write(180);
@@ -92,8 +92,15 @@ void loop() {
         delay(1000);
       } else {
         lcd.setPosition(0, 0);
-        lcd.print("Invalid waste detected");
+        lcd.print("Non-metal detected");
         Serial.println("Invalid command: " + command);
+        servoMain.write(0);
+        delay(5000);
+        servoDischarge.write(45);
+        delay(2000);
+        servoMain.write(90);
+        servoDischarge.write(90);
+        delay(1000);
       }
       lcd.clear();
       lcd.setPosition(0, 0);
