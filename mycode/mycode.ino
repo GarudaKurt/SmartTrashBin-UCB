@@ -1,10 +1,10 @@
 #include <Wire.h>
 #include <Servo.h>
-#include <Bonezegei_LCD1602_I2C.h>
+#include <LiquidCrystal_I2C.h>
 
 #include "binMonitoring.h"
 
-Bonezegei_LCD1602_I2C lcd(0x27);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 BinMonitoring bin;
 
@@ -31,9 +31,10 @@ void setup() {
   servoDischarge.attach(pinServo_Discharge);
   servoDischarge.write(90); //default position
 
-  lcd.begin();
-  lcd.print("Loading....");
-  lcd.setPosition(0,0);
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print("Waiting....");
   delay(2000);
   lcd.clear(); 
 }
@@ -43,24 +44,6 @@ void loop() {
 
   if(currentMills - prevMills >= interval) {
    
-    if(bin.canBinDistance() < 30 && bin.can_IRs() == 0) {
-      lcd.clear();
-      lcd.setPosition(0,0);
-      lcd.print("Bin metal full");
-      lcd.setPosition(0,1);
-      lcd.print("Action required!");
-      bin.buzzerStart();
-    }
- 
-    if(bin.bottleBinDistance() < 30 && bin.bottle_IRs() == 0) {
-      lcd.clear();
-      lcd.setPosition(0,0);
-      lcd.print("Bin bottle full");
-      lcd.setPosition(0,1);
-      lcd.print("Action required!");
-      bin.buzzerStart();
-    }
-
     if (Serial.available() > 0) {
       String command = Serial.readStringUntil('\n');
       command.trim();
@@ -68,8 +51,9 @@ void loop() {
       if (command.equals(plasticBottle) || command.equals(waterBottle))
       {
         Serial.println("Bottle detected");
+        lcd.clear();
         lcd.print("Bottle detected");
-        lcd.setPosition(0, 0);
+        lcd.setCursor(0, 0);
 
         servoMain.write(0);
         delay(5000);
@@ -79,7 +63,8 @@ void loop() {
         servoDischarge.write(90);
         delay(1000);
       } else if (command.equals(metalCan)) {
-        lcd.setPosition(0, 0);
+        lcd.clear();
+        lcd.setCursor(0, 0);
         lcd.print("Metal detected");
         Serial.println("Can detected");
 
@@ -91,7 +76,8 @@ void loop() {
         servoDischarge.write(90);
         delay(1000);
       } else {
-        lcd.setPosition(0, 0);
+        lcd.clear();
+        lcd.setCursor(0, 0);
         lcd.print("Non-metal detected");
         Serial.println("Invalid command: " + command);
         servoMain.write(0);
@@ -103,8 +89,26 @@ void loop() {
         delay(1000);
       }
       lcd.clear();
-      lcd.setPosition(0, 0);
+      lcd.setCursor(0, 0);
       lcd.print("Waiting...");
+    }
+
+    if(bin.canBinDistance() < 30 && bin.can_IRs() == 0) {
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Bin metal full");
+      lcd.setCursor(0,1);
+      lcd.print("Action required!");
+      bin.buzzerStart();
+    }
+ 
+    if(bin.bottleBinDistance() < 30 && bin.bottle_IRs() == 0) {
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Bin bottle full");
+      lcd.setCursor(0,1);
+      lcd.print("Action required!");
+      bin.buzzerStart();
     }
 
     prevMills = currentMills;
