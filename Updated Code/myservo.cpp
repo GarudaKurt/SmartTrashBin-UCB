@@ -1,10 +1,9 @@
-#include <Wire.h>
-#include <Servo.h>
-#include <Arduino.h>
+#include "myservo.h"
 
 Servo servoMain;
 Servo servoDischarge;
-
+const int pinServo_Main = 6;
+const int pinServo_Discharge = 5;
 void initServo() {
   servoMain.attach(pinServo_Main);
   servoMain.write(90); //default position
