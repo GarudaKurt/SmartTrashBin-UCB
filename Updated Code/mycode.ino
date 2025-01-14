@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include "displayLCD.h"
 #include "binMonitoring.h"
-#include "Servos.h"
+#include "myservo.h"
 
 #define plasticBottle "bottle"
 #define waterBottle "waterbottle"
